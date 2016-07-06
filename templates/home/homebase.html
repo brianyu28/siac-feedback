@@ -3,7 +3,7 @@
 
 {% block sidebar %}
 <li class="active">
-    <a href="#">
+    <a href={{ url_for('home.homepage') }}>
         <i class="pe-7s-home"></i>
         <p>Home</p>
     </a>
@@ -21,13 +21,13 @@
     </a>
 </li>
 <li>
-    <a href="#">
+    <a href={{ url_for('home.about') }}>
         <i class="pe-7s-news-paper"></i>
         <p>About Us</p>
     </a>
 </li>
 <li>
-    <a href="#">
+    <a href={{ url_for('home.contact') }}>
         <i class="pe-7s-mail"></i>
         <p>Contact</p>
     </a>

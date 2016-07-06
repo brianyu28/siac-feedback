@@ -7,3 +7,11 @@ home = Blueprint('home', __name__,
 @home.route('/')
 def homepage():
     return render_template('homepage.html')
+
+@home.route('/about/')
+def about():
+    return render_template('about.html')
+
+@home.route('/contact/')
+def contact():
+    return render_template('contact.html')
