@@ -2,31 +2,31 @@
 
 
 {% block sidebar %}
-<li class="active">
+<li id="sidebar-home">
     <a href={{ url_for('home.homepage') }}>
         <i class="pe-7s-home"></i>
         <p>Home</p>
     </a>
 </li>
-<li>
-    <a href="#">
+<li id="sidebar-login">
+    <a href="{{ url_for('home.login') }}">
         <i class="pe-7s-user"></i>
         <p>Log In</p>
     </a>
 </li>
-<li>
-    <a href="#">
+<li id="sidebar-register">
+    <a href="{{ url_for('home.register') }}">
         <i class="pe-7s-add-user"></i>
         <p>Register</p>
     </a>
 </li>
-<li>
+<li id="sidebar-about">
     <a href={{ url_for('home.about') }}>
         <i class="pe-7s-news-paper"></i>
         <p>About Us</p>
     </a>
 </li>
-<li>
+<li id="sidebar-contact">
     <a href={{ url_for('home.contact') }}>
         <i class="pe-7s-mail"></i>
         <p>Contact</p>
