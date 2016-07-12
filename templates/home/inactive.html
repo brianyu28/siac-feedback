@@ -1,0 +1,24 @@
+{% extends "home/homebase.html" %}
+
+{% block headline %}
+SIAC Feedback
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col">
+        <h3>Your Account is Inactive.</h3>
+        <br /><br />
+        Please check your email for an activation link for your account. If you have not received an activation link for your account, please contact SIAC Feedback.
+    </div>
+</div>
+{% endblock %}
+
+
+{% block script %}
+<script>
+$(document).ready(function() {
+    $('#sidebar-register').addClass('active');   
+});
+</script>
+{% endblock %}

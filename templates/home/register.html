@@ -5,10 +5,46 @@ Register for SIAC Feedback
 {% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-sm-12">
-        REGISTER FORM HERE
+{% if error is defined %}
+<div class="alert alert-danger">
+  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+  <strong>Error:</strong> {{ error }}
+</div>
+{% endif %}
+
+<div class="row" style="text-align:center;">
+    <div class="col-lg-4 col-md-3 col-sm-2"></div>
+    <div class="col-lg-4 col-md-6 col-sm-8">
+        <h3>Register for SIAC Feedback</h3>
+        <hr>
+            <form method="post" action={{ url_for('home.register') }}>
+                <h5>Basic Information</h5>
+                <input autocomplete="off" style="margin-bottom:10px;" type="text" class="form-control" name="first" placeholder="First Name" autofocus>
+                <input autocomplete="off" style="margin-bottom:10px;" type="text" class="form-control" name="last" placeholder="Last Name">
+                <input autocomplete="off" type="email" class="form-control" name="email" placeholder="Email Address">
+                Note: Users must have a valid Pleasanton Unified School District email in order to register.
+                <br /><br />
+                <h5>Account Information</h5>
+                <input autocomplete="off" style="margin-bottom:10px;" type="text" class="form-control" name="username" placeholder="Desired Username">
+                <input autocomplete="off" style="margin-bottom:10px;" type="password" class="form-control" name="password" placeholder="Password">
+                <input autocomplete="off" style="margin-bottom:10px;" type="password" class="form-control" name="password_confirm" placeholder="Confirm Password">
+                <select style="margin-bottom:10px;" class="form-control" name="acct_type">
+                   <option value="None">Select Account Type</option>
+                    <option value="Student">Student</option>
+                    <option value="Teacher">Teacher</option>
+                </select>
+                <select style="margin-bottom:10px;" class="form-control" name="school">
+                   <option value="None">Select School</option>
+                    <option value="Amador Valley High School">Amador Valley High School</option>
+                    <option value="Foothill High School">Foothill High School</option>
+                    <option value="Village High School">Village High School</option>
+                </select>
+
+                <button type="submit" class="btn btn-default">Register</button>
+            </form>
+
     </div>
+    <div class="col-lg-4 col-md-3 col-sm-2"></div>
 </div>
 {% endblock %}
 

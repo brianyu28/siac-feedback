@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+
+{% block sidebar %}
+<li id="sidebar-home">
+    <a href={{ url_for('portal.portal_page') }}>
+        <i class="pe-7s-home"></i>
+        <p>Home</p>
+    </a>
+</li>
+<li id="sidebar-logout">
+    <a href="#">
+        <i class="pe-7s-user"></i>
+        <p>Log Out</p>
+    </a>
+</li>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "home/homebase.html" %}
+
+{% block headline %}
+SIAC Feedback Activation
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col">
+        {% if success == False %}
+        <h3>Error</h3>
+        <br /><br />
+        Your account could not be activated. If you believe you are seeing this message in error, please contact SIAC Feedback.
+        {% else %}
+        <h3>Success!</h3>
+        <br /><br />
+        Your account has been activated. You can proceed to the homepage by <a href="{{ url_for('home.homepage' )}}">clicking here.</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+
+{% block script %}
+<script>
+$(document).ready(function() {
+    $('#sidebar-register').addClass('active');   
+});
+</script>
+{% endblock %}

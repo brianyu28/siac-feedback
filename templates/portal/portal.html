@@ -1,0 +1,23 @@
+{% extends "portal/portalbase.html" %}
+
+{% block headline %}
+SIAC Feedback
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-sm-12">
+        This is the homepage.
+        <br /><br />
+    </div>
+</div>
+{% endblock %}
+
+
+{% block script %}
+<script>
+$(document).ready(function() {
+    $('#sidebar-home').addClass('active');   
+});
+</script>
+{% endblock %}
