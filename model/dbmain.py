@@ -32,6 +32,8 @@ def currentUser():
 
 def authenticate(username, password):
     user = userByUsername(username)
+    if user == None:
+        return False
     hashed_pass = user["password"]
     return check_password(password, hashed_pass)
 
@@ -43,7 +45,7 @@ def userActivated(user):
     return db.users.find_one({"_id" : user})['activated']
 
 def activateUser(user):
-    result = db.users.update_one({"_id":user}, {"$set":{"activated":True}}).count()
+    result = db.users.update_one({"_id":user}, {"$set":{"activated":True}})
     return (result == 1)
 
 def validUserID(id):
@@ -51,4 +53,4 @@ def validUserID(id):
     return (result == 1)
 
 def currentUserActive():
-    return userActivated(session['id'])
+    return userActivated(ObjectId(session['id']))

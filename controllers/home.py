@@ -6,18 +6,28 @@ import bson
 home = Blueprint('home', __name__,
                         template_folder='../templates/home')
 
+@home.before_request
+def check_for_login():
+    if request.endpoint != "home.activate":
+        if 'id' in session:
+            return redirect(url_for('portal.portal_page'))
+
 @home.route('/')
 def homepage():
-    if 'id' not in session:
         return render_template('homepage.html')
-    elif not dbmain.currentUserActive():
-        return render_template('inactive.html')
-    return redirect(url_for('portal.portal_page'))
-        
 
-@home.route('/login/')
+@home.route('/login/', methods=['GET', 'POST'])
 def login():
-    return render_template('login.html')
+    if request.method == 'GET':
+        return render_template('login.html')
+    elif request.method == 'POST':
+        authenticated = dbmain.authenticate(request.form['username'], request.form['password'])
+        if authenticated:
+            user_id = str(dbmain.userByUsername(request.form['username'])['_id'])
+            session['id'] = user_id
+            return redirect(url_for('home.homepage'))
+        else:
+            return render_template('login.html', error='Your login credentials were incorrect.')
 
 @home.route('/register/', methods=['GET', 'POST'])
 def register():

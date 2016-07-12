@@ -1,4 +1,4 @@
-{% extends "home/homebase.html" %}
+{% extends "portal/portalbase.html" %}
 
 {% block headline %}
 SIAC Feedback Activation
@@ -14,7 +14,7 @@ SIAC Feedback Activation
         {% else %}
         <h3>Success!</h3>
         <br /><br />
-        Your account has been activated. You can proceed to the homepage by <a href="{{ url_for('home.homepage' )}}">clicking here.</a>
+        Your account has been activated. You can proceed to the homepage by <a href="{{ url_for('home.login' )}}">clicking here.</a>
         {% endif %}
     </div>
 </div>
@@ -24,7 +24,7 @@ SIAC Feedback Activation
 {% block script %}
 <script>
 $(document).ready(function() {
-    $('#sidebar-register').addClass('active');   
+    $('#sidebar-home').addClass('active');   
 });
 </script>
 {% endblock %}

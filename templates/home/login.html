@@ -5,10 +5,22 @@ Log In to SIAC Feedback
 {% endblock %}
 
 {% block content %}
-<div class="row">
-    <div class="col-sm-12">
-        LOGIN FORM HERE
-    </div>
+{% if error is defined %}
+<div class="alert alert-danger"> <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a> <strong>Error:</strong> {{ error }} </div>
+{% endif %}
+
+<div class="row" style="text-align:center;">
+    <div class="col-lg-4 col-md-3 col-sm-2"></div>
+    <div class="col-lg-4 col-md-6 col-sm-8">
+        <h3>Log In to SIAC Feedback</h3>
+        <form method="post" action={{ url_for( 'home.login') }}>
+            <input autocomplete="off" style="margin-bottom:10px;" type="text" class="form-control" name="username" placeholder="Username" autofocus>
+            <input autocomplete="off" type="password" class="form-control" name="password" placeholder="Password">
+            <br />
+            <button type="submit" class="btn btn-default">Log In</button>
+        </form>
+        <hr> <a class="register-link" href={{ url_for( 'home.register') }}>Need an account? Register here.</a> </div>
+    <div class="col-lg-4 col-md-5 col-sm-2"></div>
 </div>
 {% endblock %}
 

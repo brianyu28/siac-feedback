@@ -8,11 +8,17 @@ portal = Blueprint('portal', __name__,
 
 @portal.before_request
 def verify_activation():
-    if 'id' not in session:
-        return render_template('homepage.html')
-    elif not dbmain.currentUserActive():
-        return render_template('inactive.html')
+    if request.endpoint != "portal.logout":
+        if 'id' not in session:
+            return render_template('homepage.html')
+        elif not dbmain.currentUserActive():
+            return render_template('inactive.html')
     
 @portal.route('/')
 def portal_page():
     return render_template('portal.html')
+
+@portal.route('/logout/')
+def logout():
+    session.clear()
+    return redirect(url_for('home.homepage'))
