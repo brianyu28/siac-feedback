@@ -3,4 +3,5 @@
 ## Dependencies
 
 * PyMongo
+* bcrypt
 * Flask-Mail
