@@ -3,11 +3,35 @@
 
 {% block sidebar %}
 <li id="sidebar-home">
-    <a href={{ url_for('portal.portal_page') }}>
+    <a href="{{ url_for('portal.portal_page') }}">
         <i class="pe-7s-home"></i>
         <p>Home</p>
     </a>
 </li>
+
+{% if user["acct_type"] == "Student" %}
+<li id="sidebar-general">
+    <a href="{{ url_for('portal.student_general') }}">
+        <i class="pe-7s-back-2"></i>
+        <p>General Feedback</p>
+    </a>
+</li>
+{% elif user["acct_type"] == "Teacher" %}
+<li id="sidebar-general">
+    <a href="{{ url_for('portal.teacher_general') }}">
+        <i class="pe-7s-back-2"></i>
+        <p>General Feedback</p>
+    </a>
+</li>
+{% elif user["acct_type"] == "SIAC" %}
+<li id="sidebar-pending">
+    <a href="{{ url_for('portal.pending') }}">
+        <i class="pe-7s-back-2"></i>
+        <p>Pending Feedback</p>
+    </a>
+</li>
+{% endif %}
+
 <li id="sidebar-logout">
     <a href="{{ url_for('portal.logout') }}">
         <i class="pe-7s-user"></i>

@@ -1,0 +1,89 @@
+{% extends "portal/portalbase.html" %}
+
+{% block headline %}
+General Feedback
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-sm-12">
+        <table id="teacher-table" class="table table-hover table-striped" style="font-size:14px;">
+            <thead>
+                <th>Write Feedback</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+            </thead>
+            <body>
+               {% for teacher in teachers %}
+                <td><button onclick=writeFeedback("{{ teacher['_id']|string }}") class="btn btn-xs btn-primary">Write Feedback</button></td>
+                <td>{{ teacher.first }}</td>
+                <td>{{ teacher.last }}</td>
+                {% endfor %}
+            </body>
+        </table>
+        <br /><br />
+    </div>
+</div>
+{% endblock %}
+
+{% block outerbody %}
+<div id="write-feedback-modal" class="modal fade" role="dialog" tabindex="-1">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Write Feedback: <span id="teacher-name-span"></span></h4>
+      </div>
+      <div class="modal-body">
+        <textarea class="form-control" id="feedback-area" rows="5" style="resize:vertical;"></textarea>
+      </div>
+      <div class="modal-footer">
+       <span id="feedback-result-span"></span>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <span id="submit-feedback-span"></span>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+
+
+{% block script %}
+<script>
+$(document).ready(function() {
+    $('#sidebar-general').addClass('active');   
+    $('#teacher-table').DataTable();
+});
+    
+function writeFeedback(teacher_id) {
+    var parameters = {
+        teacher_id: teacher_id
+    }
+    
+    $.post("{{ url_for('ajax.teacher_info') }}", parameters, function(data, textStatus) {
+        $('#teacher-name-span').html(data["first"] + " " + data["last"]);
+        $('#submit-feedback-span').html('<button onclick=submitFeedback("' + teacher_id + '") class="btn btn-primary">Submit Feedback</button>');
+        $('#write-feedback-modal').modal();
+    }, "json");
+    
+    
+}
+    
+function submitFeedback(teacher_id) {
+    var parameters = {
+        author_id: "{{ user['_id']|string }}",
+        teacher_id: teacher_id,
+        feedback: $('#feedback-area').val()
+    }
+    
+    $.post("{{ url_for('ajax.submit_general_feedback') }}", parameters, function(data, textStatus) {
+        $('#feedback-area').val('');
+        $('#feedback-result-span').html('Feedback submitted successfully.');
+    });
+}
+    
+</script>
+{% endblock %}

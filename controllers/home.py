@@ -16,12 +16,12 @@ def check_for_login():
 
 @home.route('/')
 def homepage():
-        return render_template('homepage.html')
+        return render_template('homepage.html', user=dbmain.currentUser())
 
 @home.route('/login/', methods=['GET', 'POST'])
 def login():
     if request.method == 'GET':
-        return render_template('login.html')
+        return render_template('login.html', user=dbmain.currentUser())
     elif request.method == 'POST':
         authenticated = dbmain.authenticate(request.form['username'], request.form['password'])
         if authenticated:
@@ -29,12 +29,12 @@ def login():
             session['id'] = user_id
             return redirect(url_for('home.homepage'))
         else:
-            return render_template('login.html', error='Your login credentials were incorrect.')
+            return render_template('login.html', user=dbmain.currentUser(), error='Your login credentials were incorrect.')
 
 @home.route('/register/', methods=['GET', 'POST'])
 def register():
     if request.method == 'GET':
-        return render_template('register.html')
+        return render_template('register.html', user=dbmain.currentUser())
     if request.method == 'POST':
         # submitted register form, so register the user
         req_fields = ['first', 'last', 'email', 'username', 'password', 'password_confirm', 'acct_type', 'school']
@@ -70,20 +70,20 @@ def register():
 @home.route('/activate/<code>/')
 def activate(code):
     if not bson.objectid.ObjectId.is_valid(code):
-        return render_template('activation.html', success=False)
+        return render_template('activation.html', user=dbmain.currentUser(), success=False)
     elif not dbmain.validUserID(ObjectId(code)):
-        return render_template('activation.html', success=False)
+        return render_template('activation.html', user=dbmain.currentUser(), success=False)
     else:
         dbmain.activateUser(ObjectId(code))
-        return render_template('activation.html', success=True)
+        return render_template('activation.html', user=dbmain.currentUser(), success=True)
 
 @home.route('/about/')
 def about():
-    return render_template('about.html')
+    return render_template('about.html', user=dbmain.currentUser())
 
 @home.route('/contact/')
 def contact():
-    return render_template('contact.html')
+    return render_template('contact.html', user=dbmain.currentUser())
 
 def send_verification_email(first_name, email_address, user_id):
     with siac.app.app_context():

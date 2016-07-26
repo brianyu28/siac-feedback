@@ -1,4 +1,6 @@
 import pymongo
+from datetime import datetime
+from pytz import timezone
 from pymongo import MongoClient
 from bson import ObjectId
 from flask import session
@@ -21,14 +23,32 @@ def addUser(username, hashed_pass, first, last, email, acct_type, school):
     user_id = users.insert_one(user).inserted_id
     return user_id
 
+def addGeneralFeedback(author_id, teacher_id, timestamp, contents):
+    feedback = {
+        "author": author_id,
+        "teacher": teacher_id,
+        "timestamp": timestamp,
+        "contents": contents,
+        "approved": False
+    }
+    feedback_id = db.general.insert_one(feedback).inserted_id
+    return feedback_id
+
 def user(id):
     return db.users.find_one({"_id" : ObjectId(id)})
+
+def userById(user_id):
+    return db.users.find_one({"_id":user_id})
 
 def userByUsername(username):
     return db.users.find_one({"username" : username})
 
 def currentUser():
-    return db.users.find_one({"_id" : ObjectId(session["id"])})
+    result = db.users.find({"_id" : ObjectId(session["id"]) if "id" in session else 0})
+    if result.count() == 1:
+        return result[0]
+    else:
+        return None
 
 def authenticate(username, password):
     user = userByUsername(username)
@@ -54,3 +74,31 @@ def validUserID(id):
 
 def currentUserActive():
     return userActivated(ObjectId(session['id']))
+
+def teachersInSchool(school):
+    query = db.users.find({"acct_type":"Teacher", "school":school})
+    return query
+
+def pendingFeedback():
+    query = db.general.find({"approved":False})
+    result = []
+    for feedback in query:
+        feedback["timestamp"] = datetime.fromtimestamp(feedback['timestamp'], timezone('US/Pacific')).strftime("%m/%d/%Y %I:%M:%S %p")
+        result.append(feedback)
+    return result
+
+def approveGeneralFeedback(feedback_id):
+    result = db.general.update_one({"_id":feedback_id}, {"$set":{"approved":True}})
+    return result
+
+def deleteGeneralFeedback(feedback_id):
+    result = db.general.delete_one({"_id":feedback_id})
+    return result
+
+def generalFeedbackForTeacher(teacher_id):
+    query = db.general.find({"teacher":teacher_id, "approved":True})
+    result = []
+    for feedback in query:
+        feedback["timestamp"] = datetime.fromtimestamp(feedback['timestamp'], timezone('US/Pacific')).strftime("%m/%d/%Y %I:%M:%S %p")
+        result.append(feedback)
+    return result
