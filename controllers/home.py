@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, session, redirect, url_for
 from model import helpers, dbmain
 from bson import ObjectId
+import siac
 import bson
 
 home = Blueprint('home', __name__,
@@ -51,6 +52,15 @@ def register():
         if (not dbmain.usernameAvailable(request.form['username'])):
             return render_template('register.html', error='Your requested username is already taken.')
         user_id = dbmain.addUser(request.form['username'], helpers.get_hashed_password(request.form['password']), request.form['first'], request.form['last'], request.form['email'], request.form['acct_type'], request.form['school'])
+        
+        verify_body = "Dear " + request.form['first'] + ",<br /><br />"
+        verify_body += "Welcome to SIAC Feedback! In order to complete your registration, please click on the following link:<br /><br />"
+        verify_body += '<a href="http://siacfeedback.org/activate/' + str(user_id) + '">http://siacfeedback.org/activate/' + str(user_id) + '</a>'
+        verify_body += '<br /><br />'
+        verify_body += '-The SIAC Feedback Team'
+        
+        siac.sendmail("Verify Your Account", request.form['email'], verify_body)
+            
         session['id'] = str(user_id)
         return redirect(url_for('home.homepage'))
 
