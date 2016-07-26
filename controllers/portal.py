@@ -38,7 +38,6 @@ def teacher_general():
         return redirect(url_for('home.homepage'))
     feedback = dbmain.generalFeedbackForTeacher(user["_id"])
     return render_template('teacher_general.html', user=user, feedback=feedback)
-    
 
 @portal.route('/siac/pending/')
 def pending():
@@ -47,3 +46,4 @@ def pending():
         return redirect(url_for('home.hompeage'))
     pending = dbmain.pendingFeedback()
     return render_template('pending_feedback.html', user=user, pending=pending)
+

@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request, session, redirect, url_fo
 from model import helpers, dbmain
 from bson import ObjectId
 import siac
+import mailer
 import threading
 import bson
 
@@ -60,9 +61,9 @@ def register():
 #        verify_body += '<br /><br />'
 #        verify_body += '-The SIAC Feedback Team'
 #        siac.sendmail("Verify Your Account", request.form['email'], verify_body)
-#        t = threading.Thread(target=send_verification_email, args=[request.form['first'], request.form['email'], str(user_id)])
-#        t.setDaemon(False)
-#        t.start()
+        t = threading.Thread(target=send_verification_email, args=[request.form['first'], request.form['email'], str(user_id)])
+        t.setDaemon(False)
+        t.start()
             
         session['id'] = str(user_id)
         return redirect(url_for('home.homepage'))
@@ -86,10 +87,9 @@ def contact():
     return render_template('contact.html', user=dbmain.currentUser())
 
 def send_verification_email(first_name, email_address, user_id):
-    with siac.app.app_context():
-        verify_body = "Dear " + first_name + ",<br /><br />"
-        verify_body += "Welcome to SIAC Feedback! In order to complete your registration, please click on the following link:<br /><br />"
-        verify_body += '<a href="http://siacfeedback.org/activate/' + user_id + '">http://siacfeedback.org/activate/' + user_id + '</a>'
-        verify_body += '<br /><br />'
-        verify_body += '-The SIAC Feedback Team'
-        siac.sendmail("Verify Your Account", email_address, verify_body)
+    verify_body = "Dear " + first_name + ",<br /><br />"
+    verify_body += "Welcome to SIAC Feedback! In order to complete your registration, please click on the following link:<br /><br />"
+    verify_body += '<a href="http://siacfeedback.org/activate/' + user_id + '">http://siacfeedback.org/activate/' + user_id + '</a>'
+    verify_body += '<br /><br />'
+    verify_body += '-The SIAC Feedback Team'
+    mailer.send([email_address], "SIAC Account Verification", verify_body)
