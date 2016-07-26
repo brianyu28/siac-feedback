@@ -21,7 +21,7 @@ def submit_general_feedback():
     feedback = request.form['feedback']
     filterlist = secrets.filterlist
     for item in filterlist:
-        if item in feedback:
+        if item in feedback.lower():
             return jsonify(result="Failure")
     dbmain.addGeneralFeedback(author_id, teacher_id, int(time.time()), feedback)
     return jsonify(result="Success")
