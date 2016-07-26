@@ -67,6 +67,7 @@ function writeFeedback(teacher_id) {
     
     $.post("{{ url_for('ajax.teacher_info') }}", parameters, function(data, textStatus) {
         $('#teacher-name-span').html(data["first"] + " " + data["last"]);
+        $('#feedback-result-span').html('');
         $('#submit-feedback-span').html('<button onclick=submitFeedback("' + teacher_id + '") class="btn btn-primary">Submit Feedback</button>');
         $('#write-feedback-modal').modal();
     }, "json");
@@ -83,7 +84,10 @@ function submitFeedback(teacher_id) {
     
     $.post("{{ url_for('ajax.submit_general_feedback') }}", parameters, function(data, textStatus) {
         $('#feedback-area').val('');
-        $('#feedback-result-span').html('Feedback submitted successfully.');
+        if (data["result"] == "Success")
+            $('#feedback-result-span').html('Feedback submitted successfully.');
+        else
+            $('#feedback-result-span').html('Feedback did not pass spam filter.');
     });
 }
     

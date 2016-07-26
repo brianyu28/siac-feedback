@@ -3,6 +3,7 @@ from model import helpers, dbmain
 from bson import ObjectId
 import bson
 import time
+import secrets
 
 ajax = Blueprint('ajax', __name__,
                         template_folder='../templates/portal')
@@ -18,6 +19,10 @@ def submit_general_feedback():
     teacher_id = ObjectId(request.form['teacher_id'])
     author_id = ObjectId(request.form['author_id'])
     feedback = request.form['feedback']
+    filterlist = secrets.filterlist
+    for item in filterlist:
+        if item in feedback:
+            return jsonify(result="Failure")
     dbmain.addGeneralFeedback(author_id, teacher_id, int(time.time()), feedback)
     return jsonify(result="Success")
 
