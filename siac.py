@@ -5,9 +5,12 @@ from controllers.portal import portal
 import secrets
 app = Flask(__name__)
 app.secret_key = secrets.secret_key
-MAIL_SERVER = 'mail.siacfeedback.org'
-MAIL_USERNAME = secrets.mailusername
-MAIL_PASSWORD = secrets.mailpassword
+app.config.update(
+    DEBUG = True,
+    MAIL_SERVER = 'mail.siacfeedback.org',
+    MAIL_USERNAME = secrets.mailusername,
+    MAIL_PASSWORD = secrets.mailpassword
+)
 app.config.from_object(__name__)
 
 mail = Mail(app)
