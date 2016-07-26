@@ -60,9 +60,9 @@ def register():
 #        verify_body += '<br /><br />'
 #        verify_body += '-The SIAC Feedback Team'
 #        siac.sendmail("Verify Your Account", request.form['email'], verify_body)
-        t = threading.Thread(target=send_verification_email, args=[request.form['first'], request.form['email'], str(user_id)])
-        t.setDaemon(False)
-        t.start()
+#        t = threading.Thread(target=send_verification_email, args=[request.form['first'], request.form['email'], str(user_id)])
+#        t.setDaemon(False)
+#        t.start()
             
         session['id'] = str(user_id)
         return redirect(url_for('home.homepage'))

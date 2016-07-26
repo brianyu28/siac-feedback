@@ -16,7 +16,7 @@ def addUser(username, hashed_pass, first, last, email, acct_type, school):
         "email": email,
         "acct_type": acct_type,
         "school": school,
-        "activated": False
+        "activated": True
     }
     user_id = users.insert_one(user).inserted_id
     return user_id
