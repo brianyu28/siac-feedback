@@ -16,7 +16,9 @@ def verify_activation():
     
 @portal.route('/')
 def portal_page():
-    return render_template('portal.html', user=dbmain.currentUser())
+    user = dbmain.currentUser()
+    siac_filter = user["siac_filter"]
+    return render_template('portal.html', user=user, siac_filter=siac_filter)
 
 @portal.route('/logout/')
 def logout():

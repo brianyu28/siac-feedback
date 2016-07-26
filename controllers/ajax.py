@@ -32,3 +32,9 @@ def reject_general_feedback():
     feedback_id = ObjectId(request.form['feedback_id'])
     dbmain.deleteGeneralFeedback(feedback_id)
     return jsonify(result="Success")
+
+@ajax.route('/toggle_filter/', methods=['POST'])
+def toggle_filter():
+    teacher_id = ObjectId(request.form['teacher_id'])
+    dbmain.toggleFilter(teacher_id)
+    return jsonify(result="Success")
