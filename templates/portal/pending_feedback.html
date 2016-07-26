@@ -16,10 +16,12 @@ General Feedback
             </thead>
             <body>
                {% for feedback in pending %}
+               <tr>
                 <td class="setting-row-{{ feedback['_id']|string }}"><button onclick=approveFeedback("{{ feedback['_id']|string }}") class="btn btn-xs btn-primary">Approve</button></td>
                 <td class="setting-row-{{ feedback['_id']|string }}"><button onclick=rejectFeedback("{{ feedback['_id']|string }}") class="btn btn-xs btn-danger">Reject</button></td>
                 <td>{{ feedback.contents }}</td>
                 <td>{{ feedback.timestamp }}</td>
+                </tr>
                 {% endfor %}
             </body>
         </table>

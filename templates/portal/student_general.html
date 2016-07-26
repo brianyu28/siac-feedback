@@ -15,9 +15,11 @@ General Feedback
             </thead>
             <body>
                {% for teacher in teachers %}
+               <tr>
                 <td><button onclick=writeFeedback("{{ teacher['_id']|string }}") class="btn btn-xs btn-primary">Write Feedback</button></td>
                 <td>{{ teacher.first }}</td>
                 <td>{{ teacher.last }}</td>
+                </tr>
                 {% endfor %}
             </body>
         </table>

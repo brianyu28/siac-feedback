@@ -15,9 +15,11 @@ General Feedback
             </thead>
             <body>
                {% for item in feedback %}
+               <tr>
                 <td id="status-row-{{ item['_id']|string }}"><button onclick=deleteFeedback("{{ item['_id']|string }}") class="btn btn-xs btn-danger">Delete</button></td>
                 <td>{{ item.contents }}</td>
                 <td>{{ item.timestamp }}</td>
+                </tr>
                 {% endfor %}
             </body>
         </table>
