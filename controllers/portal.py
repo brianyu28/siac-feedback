@@ -49,3 +49,10 @@ def pending():
     pending = dbmain.pendingFeedback()
     return render_template('pending_feedback.html', user=user, pending=pending)
 
+@portal.route('/teachers/classes/')
+def teacher_courses():
+    user = dbmain.currentUser()
+    if user["acct_type"] != "Teacher":
+        return redirect(url_for('home.homepage'))
+    courses = dbmain.coursesForTeacher(user["_id"])
+    return render_template('teacher_classes.html', user=user, courses=courses)

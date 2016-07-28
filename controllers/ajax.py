@@ -43,3 +43,10 @@ def toggle_filter():
     teacher_id = ObjectId(request.form['teacher_id'])
     dbmain.toggleFilter(teacher_id)
     return jsonify(result="Success")
+
+@ajax.route('/add_course/', methods=['POST'])
+def add_course():
+    name = request.form['name']
+    password = request.form['password']
+    dbmain.addCourse(ObjectId(session['id']), name, password)
+    return jsonify(result="Success")

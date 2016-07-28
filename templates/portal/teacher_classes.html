@@ -1,0 +1,81 @@
+{% extends "portal/portalbase.html" %}
+
+{% block headline %}
+My Classes
+{% endblock %}
+
+{% block content %}
+<button onclick=showAddCourse() class="btn btn-primary btn-sm">Add Course</button>
+<br /><br />
+<div class="row">
+    <div class="col-sm-12">
+        <table id="courses-table" class="table table-hover table-striped" style="font-size:14px;">
+            <thead>
+                <th>Details</th>
+                <th>Class Name</th>
+                <th>Password</th>
+            </thead>
+            <body>
+               {% for course in courses %}
+               <tr>
+                    <td><button class="btn btn-primary btn-xs">Details</button></td>
+                    <td>{{ course.name }}</td>
+                    <td>{{ course.password }}</td>
+                </tr>
+                {% endfor %}
+            </body>
+        </table>
+        <br /><br />
+    </div>
+</div>
+{% endblock %}
+
+{% block outerbody %}
+<div id="add-course-modal" class="modal fade" role="dialog" tabindex="-1">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Add Course</h4>
+      </div>
+      <div class="modal-body">
+        <input type="text" class="form-control" id="course-name" placeholder="Course Name"><br />
+        <input type="text" class="form-control" id="course-password" placeholder="Desired Course Password">
+      </div>
+      <div class="modal-footer">
+       <span id="feedback-result-span"></span>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button onclick=addCourse() type="button" class="btn btn-primary">Add Course</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+
+
+{% block script %}
+<script>
+$(document).ready(function() {
+    $('#sidebar-classes').addClass('active');   
+    $('#courses-table').DataTable();
+});
+    
+function showAddCourse() {
+    $('#add-course-modal').modal();
+}
+    
+function addCourse() {
+    var parameters = {
+        name: $('#course-name').val(),
+        password: $('#course-password').val()
+    }
+    
+    $.post("{{ url_for('ajax.add_course') }}", parameters, function(data, textStatus) {
+       location.reload(true); 
+    });
+}
+</script>
+{% endblock %}

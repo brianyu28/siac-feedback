@@ -113,3 +113,22 @@ def toggleFilter(teacher_id):
     teacher = db.users.find_one({"_id":teacher_id})
     result = db.users.update_one({"_id":teacher_id}, {"$set":{"siac_filter": not teacher["siac_filter"]}})
     return result
+
+def addCourse(teacher_id, name, password):
+    course = {
+        "teacher_id": teacher_id,
+        "name": name,
+        "password": password
+    }
+    course_id = db.courses.insert_one(course).inserted_id
+    return course_id
+
+def courseById(course_id):
+    return db.courses.find_one({"_id":course_id})
+
+def coursesForTeacher(teacher_id):
+    query = db.courses.find({"teacher_id":teacher_id})
+    result = []
+    for course in query:
+        result.append(course)
+    return result
