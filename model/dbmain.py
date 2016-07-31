@@ -8,6 +8,9 @@ from helpers import *
 client = MongoClient('mongodb://siac:debate3651!@ds023442.mlab.com:23442/siac')
 db = client.siac
 
+def timestampString(timestamp):
+    return datetime.fromtimestamp(timestamp, timezone('US/Pacific')).strftime("%m/%d/%Y %I:%M:%S %p")
+
 def addUser(username, hashed_pass, first, last, email, acct_type, school):
     users = db.users
     user = {
@@ -150,11 +153,14 @@ def addQuestion(course_id, qtype, timestamp, name):
     question_id = db.questions.insert_one(question).inserted_id
     return question_id
 
+def questionById(question_id):
+    return db.questions.find_one({"_id":question_id})
+
 def removeQuestion(question_id):
     result = db.questions.delete_one({"_id":question_id})
     return result
 
-def questionifExists(question_id):
+def questionIfExists(question_id):
     query = db.questions.find({"_id":question_id})
     return query[0] if query.count() > 0 else None
 
@@ -163,6 +169,13 @@ def questionsForCourse(course_id):
     result = []
     for question in query:
         question["response_count"] = responseCountForQuestion(question["_id"])
+        result.append(question)
+    return result
+
+def openQuestionsForCourse(course_id):
+    query = db.questions.find({"course_id":course_id, "open":True})
+    result = []
+    for question in query:
         result.append(question)
     return result
 
@@ -184,5 +197,50 @@ def responsesForQuestion(question_id):
     query = db.responses.find({"question_id":question_id})
     result = []
     for response in query:
+        response["timestamp"] = timestampString(response["timestamp"])
         result.append(response)
     return result
+
+def toggleQuestionOpen(question_id, open_status):
+    result = db.questions.update_one({"_id":question_id}, {"$set":{"open":open_status}})
+    return result
+
+def deleteResponse(response_id):
+    result = db.responses.delete_one({"_id":response_id})
+    return result
+
+def addRegistration(user_id, course_id):
+    registration = {
+        "user_id": user_id,
+        "course_id": course_id
+    }
+    reg_id = db.registration.insert_one(registration).inserted_id
+    return reg_id
+
+def removeCourseRegistration(registration_id):
+    result = db.registration.delete_one(registration_id)
+    return result
+
+def coursesForStudent(user_id):
+    regs = db.registration.find({"user_id":user_id})
+    result = []
+    for reg in regs:
+        course = db.courses.find_one({"_id":reg["course_id"]})
+        course['teacher'] = userById(course['teacher_id'])
+        result.append(course)
+    return result
+
+def studentIsRegisteredForCourse(user_id, course_id):
+    query = db.registration.find({"user_id":user_id, "course_id":course_id})
+    return query.count() > 0
+    
+def unregisteredCoursesForStudent(user_id):
+    user = userById(user_id)
+    courses = db.courses.find({}).sort('name', 1)
+    result = []
+    for course in courses:
+        course['teacher'] = userById(course['teacher_id'])
+        if not studentIsRegisteredForCourse(user_id, course['_id']) and course['teacher']['school'] == user['school']:
+            result.append(course)
+    return result
+

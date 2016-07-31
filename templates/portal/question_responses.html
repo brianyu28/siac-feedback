@@ -1,11 +1,20 @@
 {% extends "portal/portalbase.html" %}
 
 {% block headline %}
-{{ course['name'] }}
+{{ course['name'] }} : Question Detail
 {% endblock %}
 
 {% block content %}
-<a href="{{ url_for('portal.teacher_courses') }}" class="btn btn-sm btn-primary">< Back to Classes</a>
+<a href="{{ url_for('portal.teacher_course', course_id = course['_id']|string ) }}" class="btn btn-sm btn-primary">< Back to Class</a>
+<br /><br />
+<h5>{{ question['name'] }}</h5>
+<br />
+This question is currently: <b style="font-size:22px;">{% if question['open'] %}OPEN{% else %}CLOSED{% endif %}</b> for responses. 
+{% if question['open'] %}
+<button onclick=toggleQuestionOpen(false) class="btn btn-sm btn-primary">Close Question</button>
+{% else %}
+<button onclick=toggleQuestionOpen(true) class="btn btn-sm btn-primary">Open Question</button>
+{% endif %}
 <br /><br />
 <div class="row">
     <div class="col-sm-12">
@@ -16,7 +25,13 @@
                 <th>Timestamp</th>
             </thead>
             <body>
-
+                {% for response in responses %}
+                <tr>
+                    <td><button onclick=deleteResponse("{{ response['_id']|string }}") class="btn btn-xs btn-danger">Delete</button></td>
+                    <td>{{ response.contents }}</td>
+                    <td>{{ response.timestamp }}</td>
+                </tr>
+                {% endfor %}
             </body>
         </table>
         <br /><br />
@@ -31,6 +46,28 @@ $(document).ready(function() {
     $('#sidebar-classes').addClass('active');   
     $('#responses-table').DataTable();
 });
+
+function toggleQuestionOpen(status) {
+    var parameters = {
+        question_id: "{{ question['_id']|string }}",
+        open_status: status
+    }
     
+    $.post("{{ url_for('ajax.toggle_question_open') }}", parameters, function(data, textStatus) {
+       location.reload(true); 
+    });
+}
+    
+function deleteResponse(response_id) {
+    var parameters = {
+        response_id: response_id
+    }
+    
+    $.post("{{ url_for('ajax.delete_response') }}", parameters, function(data, textStatus) {
+       location.reload(true); 
+    });
+}
+    
+
 </script>
 {% endblock %}

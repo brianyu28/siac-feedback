@@ -1,0 +1,93 @@
+{% extends "portal/portalbase.html" %}
+
+{% block headline %}
+{{ course['name'] }} ({{ course['teacher']['first'] }} {{ course['teacher']['last'] }})
+{% endblock %}
+
+{% block content %}
+<a href="{{ url_for('portal.student_courses') }}" class="btn btn-sm btn-primary">< Back to Classes</a>
+<br /><br />
+<div class="row">
+    <div class="col-sm-12">
+        <table id="questions-table" class="table table-hover table-striped" style="font-size:14px;">
+            <thead>
+                <th>Respond</th>
+                <th>Question</th>
+            </thead>
+            <body>
+                {% for question in questions %}
+                <tr>
+                    <td><button class="btn btn-xs btn-primary" onclick=showRespond("{{ question['_id']|string }}")>Respond</button></td>
+                    <td>{{ question['name'] }}</td>
+                </tr>
+                {% endfor %}
+            </body>
+        </table>
+        <br /><br />
+    </div>
+</div>
+{% endblock %}
+
+{% block outerbody %}
+<div id="write-feedback-modal" class="modal fade" role="dialog" tabindex="-1">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Write Feedback</h4>
+      </div>
+      <div class="modal-body">
+        <h5 id="question-content-span"></h5>
+        <textarea class="form-control" id="feedback-area" rows="5" style="resize:vertical;"></textarea>
+      </div>
+      <div class="modal-footer">
+       <span id="feedback-result-span"></span>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <span id="submit-feedback-span"></span>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+
+
+{% block script %}
+<script>
+$(document).ready(function() {
+    $('#sidebar-classes').addClass('active');   
+    $('#questions-table').DataTable();
+});
+
+function showRespond(question_id) {
+    var parameters = {
+        question_id: question_id
+    }
+    
+    $.post("{{ url_for('ajax.question_details') }}", parameters, function(data, textStatus) {
+        $('#question-content-span').html(data['question']['name']);
+        $('#submit-feedback-span').html('<button onclick=submitFeedback("' + question_id + '") class="btn btn-md btn-primary">Submit Feedback</button>');
+       $('#write-feedback-modal').modal(); 
+    });
+}
+    
+function submitFeedback(question_id) {
+    var parameters = {
+        author_id: "{{ user['_id']|string }}",
+        question_id: question_id,
+        feedback: $('#feedback-area').val()
+    }
+    
+    $.post("{{ url_for('ajax.submit_response') }}", parameters, function(data, textStatus) {
+        $('#feedback-area').val('');
+        if (data["result"] == "Success")
+            $('#feedback-result-span').html('Feedback submitted successfully.');
+        else
+            $('#feedback-result-span').html('Feedback did not pass spam filter.');
+    });
+}
+
+</script>
+{% endblock %}

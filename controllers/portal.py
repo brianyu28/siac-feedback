@@ -77,4 +77,22 @@ def question_responses(question_id):
     user = dbmain.currentUser()
     question = dbmain.questionIfExists(ObjectId(question_id))
     course = dbmain.courseIfExists(question["course_id"])
-    return render_template('question_responses.html', user=user, question=question)
+    responses = dbmain.responsesForQuestion(question["_id"])
+    return render_template('question_responses.html', user=user, question=question, course=course, responses=responses)
+
+@portal.route('/students/classes/')
+def student_courses():
+    user = dbmain.currentUser()
+    courses = dbmain.coursesForStudent(user['_id'])
+    unregistered = dbmain.unregisteredCoursesForStudent(user['_id'])
+    return render_template('student_classes.html', user=user, courses=courses, unregistered=unregistered)
+
+@portal.route('/students/classes/<string:course_id>')
+def student_course(course_id):
+    user = dbmain.currentUser()
+    course = dbmain.courseIfExists(ObjectId(course_id))
+    course['teacher'] = dbmain.userById(course['teacher_id'])
+    if course == None or not dbmain.studentIsRegisteredForCourse(user['_id'], ObjectId(course_id)):
+        return redirect('portal.student_courses')
+    questions = dbmain.openQuestionsForCourse(course['_id'])
+    return render_template('student_class.html', user=user, course=course, questions=questions)

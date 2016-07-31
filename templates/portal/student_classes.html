@@ -1,0 +1,96 @@
+{% extends "portal/portalbase.html" %}
+
+{% block headline %}
+My Classes
+{% endblock %}
+
+{% block content %}
+<button onclick=showAddCourse() class="btn btn-sm btn-primary">Add Course</button>
+<br /><br />
+<div class="row">
+    <div class="col-sm-12">
+        <table id="courses-table" class="table table-hover table-striped" style="font-size:14px;">
+            <thead>
+                <th>View Questions</th>
+                <th>Course Name</th>
+                <th>Teacher</th>
+            </thead>
+            <body>
+                {% for course in courses %}
+                <tr>
+                    <td><a href="{{ url_for('portal.student_course', course_id = course['_id']|string) }}" class="btn btn-xs btn-primary">View Questions</a></td>
+                    <td>{{ course['name'] }}</td>
+                    <td>{{ course['teacher']['first'] }} {{ course['teacher']['last'] }}</td>
+                </tr>
+                {% endfor %}
+            </body>
+        </table>
+        <br /><br />
+    </div>
+</div>
+{% endblock %}
+
+{% block outerbody %}
+<div id="add-course-modal" class="modal fade" role="dialog" tabindex="-1">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Add Course</h4>
+      </div>
+      <div class="modal-body">
+        <select class="form-control" id="course-selection">
+           <option value=0 disabled selected>Choose a Course</option>
+            {% for course in unregistered %}
+            <option value="{{ course['_id']|string }}">{{ course['name'] }} ({{ course['teacher']['first'] }} {{ course['teacher']['last'] }})</option>
+            {% endfor %}
+        </select>
+        <br />
+        <input id="course-access-code" class="form-control" tyle="text" placeholder="Access Code">
+      </div>
+      <div class="modal-footer">
+       <span id="add-result-span"></span>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button onclick=addCourse() type="button" class="btn btn-primary">Add Course</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+
+
+{% block script %}
+<script>
+$(document).ready(function() {
+    $('#sidebar-classes').addClass('active');   
+    $('#courses-table').DataTable();
+});
+    
+function showAddCourse() {
+    $('#add-result-span').html('');
+    $('#course-access-code').val('');
+    $('#course-selection').val(0);
+    $('#add-course-modal').modal();
+}
+    
+function addCourse() {
+    var parameters = {
+        course_id: $('#course-selection').val(),
+        course_password: $('#course-access-code').val()
+    }
+    
+    $.post("{{ url_for('ajax.join_course') }}", parameters, function(data, textStatus) {
+       if (data['result'] == "None Selected")
+           $('#add-result-span').html('No course selected.');
+        else if (data['result'] == "Authentication Failed")
+            $('#add-result-span').html("Incorrect access code.");
+        else
+            location.reload(true);
+    });
+}
+    
+</script>
+{% endblock %}

@@ -19,7 +19,7 @@
             <body>
                 {% for question in questions %}
                 <tr>
-                    <td><a class="btn btn-xs btn-primary">View Responses</a></td>
+                    <td><a href="{{ url_for('portal.question_responses', question_id = question['_id']|string ) }}" class="btn btn-xs btn-primary">View Responses</a></td>
                     <td>{{ question['name'] }}</td>
                     <td>{{ question['response_count'] }}</td>
                 </tr>

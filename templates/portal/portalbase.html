@@ -17,7 +17,7 @@
     </a>
 </li>
 <li id="sidebar-classes">
-    <a href="#">
+    <a href="{{ url_for('portal.student_courses') }}">
         <i class="pe-7s-notebook"></i>
         <p>Classes</p>
     </a>
@@ -43,6 +43,13 @@
     </a>
 </li>
 {% endif %}
+
+<li id="sidebar-settings">
+    <a href="#">
+        <i class="pe-7s-settings"></i>
+        <p>Settings</p>
+    </a>
+</li>
 
 <li id="sidebar-logout">
     <a href="{{ url_for('portal.logout') }}">
