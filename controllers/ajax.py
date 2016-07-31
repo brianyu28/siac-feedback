@@ -50,3 +50,10 @@ def add_course():
     password = request.form['password']
     dbmain.addCourse(ObjectId(session['id']), name, password)
     return jsonify(result="Success")
+
+@ajax.route('/add_question/', methods=['POST'])
+def add_question():
+    name = request.form['name']
+    course_id = ObjectId(request.form['course'])
+    dbmain.addQuestion(course_id, "Text", int(time.time()), name)
+    return jsonify(result="Success")

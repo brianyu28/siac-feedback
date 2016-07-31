@@ -18,7 +18,7 @@ My Classes
             <body>
                {% for course in courses %}
                <tr>
-                    <td><button class="btn btn-primary btn-xs">Details</button></td>
+                    <td><a href="{{ url_for('portal.teacher_course', course_id = course['_id']|string ) }}" class="btn btn-primary btn-xs">Details</a></td>
                     <td>{{ course.name }}</td>
                     <td>{{ course.password }}</td>
                 </tr>

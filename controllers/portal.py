@@ -13,7 +13,10 @@ def verify_activation():
             return render_template('homepage.html', user=dbmain.currentUser())
         elif not dbmain.currentUserActive():
             return render_template('inactive.html', user=dbmain.currentUser())
-    
+
+@portal.route('/siac/')
+@portal.route('/students/')
+@portal.route('/teachers/')
 @portal.route('/')
 def portal_page():
     user = dbmain.currentUser()
@@ -56,3 +59,22 @@ def teacher_courses():
         return redirect(url_for('home.homepage'))
     courses = dbmain.coursesForTeacher(user["_id"])
     return render_template('teacher_classes.html', user=user, courses=courses)
+
+# for a specific course
+@portal.route('/teachers/classes/<string:course_id>')
+def teacher_course(course_id):
+    user = dbmain.currentUser()
+    # check to see if class actually exists and belongs to teacher
+    course = dbmain.courseIfExists(ObjectId(course_id))
+    if course == None or course["teacher_id"] != user["_id"]:
+        return redirect('portal.teacher_courses')
+    # get the questions
+    questions = dbmain.questionsForCourse(course["_id"])
+    return render_template('teacher_class.html', user=user, course=course, questions=questions)
+
+@portal.route('/teacher/questions/<string:question_id>')
+def question_responses(question_id):
+    user = dbmain.currentUser()
+    question = dbmain.questionIfExists(ObjectId(question_id))
+    course = dbmain.courseIfExists(question["course_id"])
+    return render_template('question_responses.html', user=user, question=question)

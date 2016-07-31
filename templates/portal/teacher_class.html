@@ -1,0 +1,81 @@
+{% extends "portal/portalbase.html" %}
+
+{% block headline %}
+{{ course['name'] }}
+{% endblock %}
+
+{% block content %}
+<a href="{{ url_for('portal.teacher_courses') }}" class="btn btn-sm btn-primary">< Back to Classes</a>
+ <button onclick=showAddQuestion() class="btn btn-sm btn-primary">New Question</button>
+<br /><br />
+<div class="row">
+    <div class="col-sm-12">
+        <table id="questions-table" class="table table-hover table-striped" style="font-size:14px;">
+            <thead>
+                <th>View Responses</th>
+                <th>Question</th>
+                <th>Responses</th>
+            </thead>
+            <body>
+                {% for question in questions %}
+                <tr>
+                    <td><a class="btn btn-xs btn-primary">View Responses</a></td>
+                    <td>{{ question['name'] }}</td>
+                    <td>{{ question['response_count'] }}</td>
+                </tr>
+                {% endfor %}
+            </body>
+        </table>
+        <br /><br />
+    </div>
+</div>
+{% endblock %}
+
+{% block outerbody %}
+<div id="add-question-modal" class="modal fade" role="dialog" tabindex="-1">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Add Question</h4>
+      </div>
+      <div class="modal-body">
+        <input type="text" class="form-control" id="question-name" placeholder="Question"><br />
+      </div>
+      <div class="modal-footer">
+       <span id="feedback-result-span"></span>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button onclick=addQuestion() type="button" class="btn btn-primary">Add Question</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+
+
+{% block script %}
+<script>
+$(document).ready(function() {
+    $('#sidebar-classes').addClass('active');   
+    $('#questions-table').DataTable();
+});
+    
+function showAddQuestion() {
+    $('#add-question-modal').modal();
+}
+    
+function addQuestion() {
+    var parameters = {
+        course: "{{ course['_id']|string }}",
+        name: $('#question-name').val()
+    }
+    
+    $.post("{{ url_for('ajax.add_question') }}", parameters, function(data, textStatus) {
+       location.reload(true); 
+    });
+}
+</script>
+{% endblock %}

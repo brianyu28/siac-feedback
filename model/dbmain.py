@@ -114,6 +114,7 @@ def toggleFilter(teacher_id):
     result = db.users.update_one({"_id":teacher_id}, {"$set":{"siac_filter": not teacher["siac_filter"]}})
     return result
 
+# teachers can manage Courses that students can join
 def addCourse(teacher_id, name, password):
     course = {
         "teacher_id": teacher_id,
@@ -126,9 +127,62 @@ def addCourse(teacher_id, name, password):
 def courseById(course_id):
     return db.courses.find_one({"_id":course_id})
 
+def courseIfExists(course_id):
+    query = db.courses.find({"_id":course_id})
+    return query[0] if query.count() > 0 else None
+
 def coursesForTeacher(teacher_id):
     query = db.courses.find({"teacher_id":teacher_id})
     result = []
     for course in query:
         result.append(course)
+    return result
+
+# a "Question" is posed by a teacher within a particular course
+def addQuestion(course_id, qtype, timestamp, name):
+    question = {
+        "course_id": course_id,
+        "qtype": qtype,
+        "timestamp": timestamp,
+        "name": name,
+        "open":True
+    }
+    question_id = db.questions.insert_one(question).inserted_id
+    return question_id
+
+def removeQuestion(question_id):
+    result = db.questions.delete_one({"_id":question_id})
+    return result
+
+def questionifExists(question_id):
+    query = db.questions.find({"_id":question_id})
+    return query[0] if query.count() > 0 else None
+
+def questionsForCourse(course_id):
+    query = db.questions.find({"course_id":course_id})
+    result = []
+    for question in query:
+        question["response_count"] = responseCountForQuestion(question["_id"])
+        result.append(question)
+    return result
+
+# a "Response" is a student's answer to a teacher's question in a course
+def addResponse(author_id, question_id, timestamp, contents):
+    response = {
+        "author_id": author_id,
+        "question_id": question_id,
+        "timestamp": timestamp,
+        "contents": contents
+    }
+    response_id = db.responses.insert_one(response).inserted_id
+    return response_id
+
+def responseCountForQuestion(question_id):
+    return db.responses.find({"question_id":question_id}).count()
+
+def responsesForQuestion(question_id):
+    query = db.responses.find({"question_id":question_id})
+    result = []
+    for response in query:
+        result.append(response)
     return result
