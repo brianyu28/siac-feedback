@@ -138,6 +138,7 @@ def coursesForTeacher(teacher_id):
     query = db.courses.find({"teacher_id":teacher_id})
     result = []
     for course in query:
+        course["count"] = numStudentsInCourse(course["_id"])
         result.append(course)
     return result
 
@@ -233,6 +234,10 @@ def coursesForStudent(user_id):
 def studentIsRegisteredForCourse(user_id, course_id):
     query = db.registration.find({"user_id":user_id, "course_id":course_id})
     return query.count() > 0
+
+def numStudentsInCourse(course_id):
+    query = db.registration.find({"course_id":course_id})
+    return query.count()
     
 def unregisteredCoursesForStudent(user_id):
     user = userById(user_id)

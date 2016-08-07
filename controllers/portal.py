@@ -69,6 +69,7 @@ def teacher_course(course_id):
     if course == None or course["teacher_id"] != user["_id"]:
         return redirect('portal.teacher_courses')
     # get the questions
+    course['count'] = dbmain.numStudentsInCourse(course['_id'])
     questions = dbmain.questionsForCourse(course["_id"])
     return render_template('teacher_class.html', user=user, course=course, questions=questions)
 
