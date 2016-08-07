@@ -1,0 +1,56 @@
+{% extends "portal/portalbase.html" %}
+
+{% block headline %}
+Settings
+{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-sm-12">
+
+        <div class="card">
+            <div class="header">
+                <h4 class="title">Change Password</h4>
+            </div>
+            <div class="content">
+                <div class="row"><div class="col-sm-12">
+                    <input class="form-control" type="password" placeholder="Old Password" id="old-pass"/><br/>
+                    <input class="form-control" type="password" placeholder="New Password" id="new-pass"/><br/>
+                    <input class="form-control" type="password" placeholder="Confirm New Password" id="confirm-new-pass"/><br/>
+                    <button id="change-password" class="btn btn-primary btn-md">Change Password</button> &nbsp;&nbsp;&nbsp;<span id="pass-change-area"></span>
+                </div></div>
+            </div>
+        </div>
+        
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+$(document).ready(function() {
+    $('#sidebar-settings').addClass('active');
+    
+    $('#change-password').click(function() {
+        changePassword();
+    });
+});
+    
+function changePassword() {
+    var parameters = {
+        old_pass: $('#old-pass').val(),
+        new_pass: $('#new-pass').val(),
+        confirm_pass: $('#confirm-new-pass').val()
+    }
+    
+    $.post("{{ url_for('ajax.change_password') }}", parameters, function(data, textStatus) {
+        if (data["success"])
+            $('#pass-change-area').html('Password changed successfully.');
+        else if (data["credentials"])
+            $('#pass-change-area').html('Passwords did not match.');
+        else
+            $('#pass-change-area').html('Old password was incorrect.');
+    });
+}
+</script>
+{% endblock %}

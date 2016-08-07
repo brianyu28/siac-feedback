@@ -52,6 +52,10 @@ def userById(user_id):
 def userByUsername(username):
     return db.users.find_one({"username" : username})
 
+def changeUserAttribute(user_id, attribute, value):
+    query = db.users.update_one({"_id":user_id}, {"$set":{attribute:value}})
+    return query
+
 def currentUser():
     result = db.users.find({"_id" : ObjectId(session["id"]) if "id" in session else 0})
     if result.count() == 1:

@@ -97,3 +97,8 @@ def student_course(course_id):
         return redirect('portal.student_courses')
     questions = dbmain.openQuestionsForCourse(course['_id'])
     return render_template('student_class.html', user=user, course=course, questions=questions)
+
+@portal.route('/settings/')
+def settings():
+    user = dbmain.currentUser()
+    return render_template('settings.html', user=user)

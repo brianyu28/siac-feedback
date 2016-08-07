@@ -102,3 +102,16 @@ def submit_response():
             return jsonify(result="Failure")
     dbmain.addResponse(author_id, question_id, int(time.time()), feedback)
     return jsonify(result="Success")
+
+@ajax.route('/change_password/', methods=['POST'])
+def change_password():
+    user = dbmain.currentUser()
+    old_pass = request.form['old_pass']
+    new_pass = request.form['new_pass']
+    confirm_pass = request.form['confirm_pass']
+    if not helpers.check_password(old_pass, user['password']):
+        return jsonify(success=False, credentials=False)
+    if new_pass != confirm_pass:
+        return jsonify(success=False, credentials=True)
+    dbmain.changeUserAttribute(user['_id'], "password", helpers.get_hashed_password(new_pass))
+    return jsonify(success=True)
