@@ -115,3 +115,15 @@ def change_password():
         return jsonify(success=False, credentials=True)
     dbmain.changeUserAttribute(user['_id'], "password", helpers.get_hashed_password(new_pass))
     return jsonify(success=True)
+
+@ajax.route('/send_general_reply/', methods=['POST'])
+def send_general_reply():
+    user = dbmain.currentUser()
+    user_id = user['_id']
+    feedback_id = ObjectId(request.form['feedback_id'])
+    author_id = dbmain.authorOfGeneralFeedback(feedback_id)
+    reply = request.form['contents']
+    dbmain.addReply(user_id, author_id, int(time.time()), reply)
+    return jsonify(success=True)
+    
+    

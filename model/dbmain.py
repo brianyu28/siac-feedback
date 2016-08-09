@@ -253,3 +253,17 @@ def unregisteredCoursesForStudent(user_id):
             result.append(course)
     return result
 
+def authorOfGeneralFeedback(feedback_id):
+    feedback = db.general.find_one({"_id":feedback_id})
+    return feedback['author']
+
+# function that adds a response from teacher to student
+def addReply(teacher_id, student_id, timestamp, contents):
+    reply = {
+        "teacher_id": teacher_id,
+        "student_id": student_id,
+        "timestamp": timestamp,
+        "contents": contents
+    }
+    reply_id = db.replies.insert_one(reply).inserted_id
+    return reply_id
