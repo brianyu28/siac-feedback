@@ -22,6 +22,12 @@
         <p>Classes</p>
     </a>
 </li>
+<li id="sidebar-replies">
+    <a href="{{ url_for('portal.student_responses') }}">
+        <i class="pe-7s-back-2"></i>
+        <p>Responses</p>
+    </a>
+</li>
 {% elif user["acct_type"] == "Teacher" %}
 <li id="sidebar-general">
     <a href="{{ url_for('portal.teacher_general') }}">

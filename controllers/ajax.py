@@ -126,4 +126,20 @@ def send_general_reply():
     dbmain.addReply(user_id, author_id, int(time.time()), reply)
     return jsonify(success=True)
     
-    
+# used for a teacher to send a reply to a student's response to a teacher's question
+@ajax.route('/send_question_reply/', methods=['POST'])
+def send_question_reply():
+    user = dbmain.currentUser()
+    user_id = user['_id']
+    feedback_id = ObjectId(request.form['feedback_id'])
+    author_id = dbmain.authorOfResponse(feedback_id)
+    reply = request.form['contents']
+    dbmain.addReply(user_id, author_id, int(time.time()), reply)
+    return jsonify(success=True)
+
+
+@ajax.route('/delete_reply/', methods=['POST'])
+def delete_reply():
+    reply_id = ObjectId(request.form['reply_id']) 
+    dbmain.deleteReply(reply_id)
+    return jsonify(success=True)

@@ -257,6 +257,10 @@ def authorOfGeneralFeedback(feedback_id):
     feedback = db.general.find_one({"_id":feedback_id})
     return feedback['author']
 
+def authorOfResponse(feedback_id):
+    feedback = db.responses.find_one({"_id":feedback_id})
+    return feedback['author_id']
+
 # function that adds a response from teacher to student
 def addReply(teacher_id, student_id, timestamp, contents):
     reply = {
@@ -267,3 +271,16 @@ def addReply(teacher_id, student_id, timestamp, contents):
     }
     reply_id = db.replies.insert_one(reply).inserted_id
     return reply_id
+
+def repliesForStudent(student_id):
+    query = db.replies.find({"student_id":student_id})
+    result = []
+    for reply in query:
+        reply["timestamp"] = timestampString(reply["timestamp"])
+        reply["teacher"] = userById(reply['teacher_id'])
+        result.append(reply)
+    return result
+
+def deleteReply(reply_id):
+    query = db.replies.delete_one({"_id":reply_id})
+    return query

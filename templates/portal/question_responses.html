@@ -21,6 +21,7 @@ This question is currently: <b style="font-size:22px;">{% if question['open'] %}
         <table id="responses-table" class="table table-hover table-striped" style="font-size:14px;">
             <thead>
                 <th>Delete</th>
+                <th>Respond</th>
                 <th>Response</th>
                 <th>Timestamp</th>
             </thead>
@@ -28,6 +29,7 @@ This question is currently: <b style="font-size:22px;">{% if question['open'] %}
                 {% for response in responses %}
                 <tr>
                     <td><button onclick=deleteResponse("{{ response['_id']|string }}") class="btn btn-xs btn-danger">Delete</button></td>
+                    <td><button onclick=respond("{{ response['_id']|string }}") class="btn btn-xs btn-primary">Respond</button></td>
                     <td>{{ response.contents }}</td>
                     <td>{{ response.timestamp }}</td>
                 </tr>
@@ -35,6 +37,27 @@ This question is currently: <b style="font-size:22px;">{% if question['open'] %}
             </body>
         </table>
         <br /><br />
+    </div>
+</div>
+{% endblock %}
+
+{% block outerbody %}
+<div id="respondModal" class="modal fade" role="dialog" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Respond to Feedback</h4>
+            </div>
+            <div class="modal-body">
+                <textarea class="form-control" id="response-area" rows="5" style="resize:vertical;"></textarea>
+            </div>
+            <div class="modal-footer">
+                <span id="submit-response-result"></span>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <span id="submit-response-span"></span>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
@@ -67,7 +90,23 @@ function deleteResponse(response_id) {
        location.reload(true); 
     });
 }
+
+function respond(feedback_id) {
+    $('#submit-response-span').html('<button type="button" class="btn btn-primary" onclick=submitResponse("' + feedback_id + '")>Respond</button>');
+    $('#respondModal').modal();
+
+}
+
+function submitResponse(feedback_id) {
+    var parameters = {
+        feedback_id: feedback_id,
+        contents: $('#response-area').val()
+    }
     
+    $.post("{{ url_for('ajax.send_question_reply') }}", parameters, function(data, textStatus) {
+        $('#submit-response-result').html('Reply successfully submitted.');
+    }, "json");
+}
 
 </script>
 {% endblock %}

@@ -102,3 +102,10 @@ def student_course(course_id):
 def settings():
     user = dbmain.currentUser()
     return render_template('settings.html', user=user)
+
+# views teacher messages to student (not anonymized)
+@portal.route('/students/responses/')
+def student_responses():
+    user = dbmain.currentUser()
+    replies = dbmain.repliesForStudent(user['_id'])
+    return render_template('student_responses.html', user=user, replies=replies)
