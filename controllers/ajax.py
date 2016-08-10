@@ -155,10 +155,18 @@ def delete_reply():
     dbmain.deleteReply(reply_id)
     return jsonify(success=True)
 
-@ajax.route('/toggle_emails', methods=['POST'])
+@ajax.route('/toggle_emails/', methods=['POST'])
 def toggle_emails():
     user_id = ObjectId(request.form['user_id'])
     dbmain.toggleEmails(user_id)
+    return jsonify(success=True)
+
+@ajax.route('/contact_us/', methods=['POST'])
+def contact_us():
+    name = request.form['name']
+    email = request.form['email']
+    feedback = request.form['feedback']
+    submit_contact_us(name, email, feedback)
     return jsonify(success=True)
 
 def send_new_question_email(users, course, teacher, question):
@@ -170,3 +178,10 @@ def send_new_question_email(users, course, teacher, question):
         msg_body += "<br/><br/>"
         msg_body += 'Log in to SIAC Feedback <a href="http://siacfeedback.org/">here</a> to view the question.'
         mailer.send([user['email']], "New Question on SIAC Feedback", msg_body)
+
+def submit_contact_us(name, email, feedback):
+    msg_body = "New Message via SIAC Feedback:<br/><br/>"
+    msg_body += "<b>Name:</b> " + name + "<br/><br/>"
+    msg_body += "<b>Email: </b>" + email + "<br/><br/>"
+    msg_body += feedback
+    mailer.send(['brianyu28@gmail.com'], "New SIAC Feedback Message", msg_body)

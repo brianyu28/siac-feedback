@@ -111,3 +111,6 @@ def student_responses():
     replies = dbmain.repliesForStudent(user['_id'])
     return render_template('student_responses.html', user=user, replies=replies)
 
+@portal.route('/contact/')
+def contact():
+    return render_template('contact.html', user=dbmain.currentUser())

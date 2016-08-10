@@ -1,4 +1,8 @@
+{% if user != None %}
+{% extends "portal/portalbase.html" %}
+{% else %}
 {% extends "home/homebase.html" %}
+{% endif %}
 
 {% block headline %}
 Contact SIAC Feedback
@@ -7,7 +11,10 @@ Contact SIAC Feedback
 {% block content %}
 <div class="row">
     <div class="col-sm-12">
-        CONTACT PAGE TEXT
+        <input autofocus class="form-control" id="name" type="text" placeholder="First and Last Name (Optional)"><br/>
+        <input class="form-control" id="email" type="email" placeholder="Email Address (Optional)"><br/>
+        <textarea class="form-control" id="feedback" rows="5" placeholder="Feedback, Questions, Bugs, or Reports"></textarea><br/>
+        <button onclick=send() class="btn btn-primary">Send</button> <span id="send-area"></span>
         <br /><br />
     </div>
 </div>
@@ -19,5 +26,17 @@ Contact SIAC Feedback
 $(document).ready(function() {
     $('#sidebar-contact').addClass('active');   
 });
+    
+function send() {
+    var parameters = {
+        name: $('#name').val(),
+        email: $('#email').val(),
+        feedback: $('#feedback').val()
+    }
+    
+    $.post("{{ url_for('ajax.contact_us') }}", parameters, function(data, textStatus) {
+        $('#send-area').html('Message submitted successfully.');
+    }, "json");
+}
 </script>
 {% endblock %}
