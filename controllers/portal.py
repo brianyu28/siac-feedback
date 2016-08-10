@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request, session, redirect, url_fo
 from model import helpers, dbmain
 from bson import ObjectId
 import bson
+import mailer
 
 portal = Blueprint('portal', __name__,
                         template_folder='../templates/portal')
@@ -109,3 +110,4 @@ def student_responses():
     user = dbmain.currentUser()
     replies = dbmain.repliesForStudent(user['_id'])
     return render_template('student_responses.html', user=user, replies=replies)
+

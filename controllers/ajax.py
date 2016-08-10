@@ -4,6 +4,7 @@ from bson import ObjectId
 import bson
 import time
 import secrets
+import mailer
 
 ajax = Blueprint('ajax', __name__,
                         template_folder='../templates/portal')
@@ -56,7 +57,17 @@ def add_question():
     name = request.form['name']
     course_id = ObjectId(request.form['course'])
     dbmain.addQuestion(course_id, "Text", int(time.time()), name)
+    course = dbmain.courseById(course_id)
+    teacher = dbmain.userById(course["teacher_id"])
+    users = dbmain.mailtoStudentsInCourse(course_id)
+    send_new_question_email(users, course, teacher, name)
     return jsonify(result="Success")
+
+@ajax.route('/delete_question/', methods=['POST'])
+def delete_question():
+    question_id = ObjectId(request.form['question_id'])
+    dbmain.deleteQuestion(question_id)
+    return jsonify(success=True)
 
 @ajax.route('/toggle_question_open/', methods=['POST'])
 def toggle_question_open():
@@ -143,3 +154,19 @@ def delete_reply():
     reply_id = ObjectId(request.form['reply_id']) 
     dbmain.deleteReply(reply_id)
     return jsonify(success=True)
+
+@ajax.route('/toggle_emails', methods=['POST'])
+def toggle_emails():
+    user_id = ObjectId(request.form['user_id'])
+    dbmain.toggleEmails(user_id)
+    return jsonify(success=True)
+
+def send_new_question_email(users, course, teacher, question):
+    for user in users:
+        msg_body = "Dear " + user["first"] + ",<br/><br/>"
+        msg_body += "A new question was posted on SIAC Feedback by <b>" + teacher["first"] + " " + teacher["last"] + "</b> in the course: <b>" + course['name'] + "</b>. "
+        msg_body += "<br/><br/>"
+        msg_body += "Question: <b>" + question + "</b>"
+        msg_body += "<br/><br/>"
+        msg_body += 'Log in to SIAC Feedback <a href="http://siacfeedback.org/">here</a> to view the question.'
+        mailer.send([user['email']], "New Question on SIAC Feedback", msg_body)

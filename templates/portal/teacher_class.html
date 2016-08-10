@@ -13,6 +13,7 @@
         <table id="questions-table" class="table table-hover table-striped" style="font-size:14px;">
             <thead>
                 <th>View Responses</th>
+                <th>Delete</th>
                 <th>Question</th>
                 <th>Responses</th>
             </thead>
@@ -20,6 +21,7 @@
                 {% for question in questions %}
                 <tr>
                     <td><a href="{{ url_for('portal.question_responses', question_id = question['_id']|string ) }}" class="btn btn-xs btn-primary">View Responses</a></td>
+                    <td><button onclick=deleteQuestion("{{ question['_id']|string }}") class="btn btn-xs btn-danger">Delete</button></td>
                     <td>{{ question['name'] }}</td>
                     <td>{{ question['response_count'] }}</td>
                 </tr>
@@ -45,7 +47,7 @@
         <input type="text" class="form-control" id="question-name" placeholder="Question"><br />
       </div>
       <div class="modal-footer">
-       <span id="feedback-result-span"></span>
+       <span id="add-result-span"></span>
         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         <button onclick=addQuestion() type="button" class="btn btn-primary">Add Question</button>
       </div>
@@ -68,12 +70,23 @@ function showAddQuestion() {
 }
     
 function addQuestion() {
+    $('#add-result-span').html('Adding... please wait...');
     var parameters = {
         course: "{{ course['_id']|string }}",
         name: $('#question-name').val()
     }
     
     $.post("{{ url_for('ajax.add_question') }}", parameters, function(data, textStatus) {
+       location.reload(true); 
+    });
+}
+    
+function deleteQuestion(question_id) {
+    var parameters = {
+        question_id: question_id
+    }
+    
+    $.post("{{ url_for('ajax.delete_question') }}", parameters, function(data, textStatus) {
        location.reload(true); 
     });
 }

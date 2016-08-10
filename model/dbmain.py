@@ -22,7 +22,10 @@ def addUser(username, hashed_pass, first, last, email, acct_type, school):
         "acct_type": acct_type,
         "school": school,
         "activated": False,
-        "siac_filter": False
+        "siac_filter": False,
+        "settings": {
+            "send_emails": True
+        }
     }
     user_id = users.insert_one(user).inserted_id
     return user_id
@@ -235,6 +238,24 @@ def coursesForStudent(user_id):
         result.append(course)
     return result
 
+def studentsInCourse(course_id):
+    regs = db.registration.find({"course_id":course_id})
+    result = []
+    for reg in regs:
+        student = db.users.find_one({"_id":reg["user_id"]})
+        result.append(student)
+    return result
+
+# get students who want to be mailed
+def mailtoStudentsInCourse(course_id):
+    regs = db.registration.find({"course_id":course_id})
+    result = []
+    for reg in regs:
+        student = db.users.find_one({"_id":reg["user_id"]})
+        if student['settings']['send_emails']:
+            result.append(student)
+    return result
+
 def studentIsRegisteredForCourse(user_id, course_id):
     query = db.registration.find({"user_id":user_id, "course_id":course_id})
     return query.count() > 0
@@ -283,4 +304,16 @@ def repliesForStudent(student_id):
 
 def deleteReply(reply_id):
     query = db.replies.delete_one({"_id":reply_id})
+    return query
+
+def toggleEmails(user_id):
+    user = db.users.find_one({"_id":user_id})
+    result = db.users.update_one({"_id":user_id}, {"$set":{"settings.send_emails":not user["settings"]["send_emails"]}})
+    return result
+
+def deleteQuestion(question_id):
+    # delete the question itself
+    query = db.questions.delete_one({"_id":question_id})
+    # delete any responses to the question
+    query2 = db.responses.delete_many({"question_id":question_id})
     return query

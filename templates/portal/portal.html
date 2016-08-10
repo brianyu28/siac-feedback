@@ -24,6 +24,21 @@ SIAC Feedback
                 </div></div>
             </div>
         </div>
+        {% elif user["acct_type"] == "Student" %}
+        <div class="card">
+            <div class="header">
+                <h4 class="title">SIAC Feedback Emails</h4>
+            </div>
+            <div class="content">
+                <div class="row"><div class="col-sm-12">
+                    SIAC Feedback has the option to send you emails whenever a teacher posts a new question in a class that you are a part of. This feature is optional: if it is turned off, then you will not receive any emails from SIAC Feedback.
+                    <br /><br />
+                    SIAC Feedback Emails are currently:<br />
+                    <b style="font-size:24px;">{% if user['settings']['send_emails'] %}ON{% else %}OFF{% endif %}</b> &nbsp;&nbsp;&nbsp;&nbsp;
+                    <button onclick="toggleEmails()" class="btn btn-sm btn-primary">Turn {% if user['settings']['send_emails'] %}Off{% else %}On{% endif %}</button>
+                </div></div>
+            </div>
+        </div>
         {% endif %}
     </div>
 </div>
@@ -38,11 +53,21 @@ $(document).ready(function() {
     
 function toggleFilter() {
     var parameters = {
-        teacher_id: "{{ user["_id"]|string }}"
+        teacher_id: "{{ user['_id']|string }}"
     }
     
     $.post("{{ url_for('ajax.toggle_filter') }}", parameters, function(data, textStatus) {
        location.reload(true);
+    });
+}
+    
+function toggleEmails() {
+    var parameters = {
+        user_id: "{{ user['_id']|string }}"
+    }
+    
+    $.post("{{ url_for('ajax.toggle_emails') }}", parameters, function(data, textStatus) {
+       location.reload(true); 
     });
 }
 </script>

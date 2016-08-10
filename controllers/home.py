@@ -54,13 +54,6 @@ def register():
         if (not dbmain.usernameAvailable(request.form['username'])):
             return render_template('register.html', error='Your requested username is already taken.')
         user_id = dbmain.addUser(request.form['username'], helpers.get_hashed_password(request.form['password']), request.form['first'], request.form['last'], request.form['email'], request.form['acct_type'], request.form['school'])
-        
-#        verify_body = "Dear " + request.form['first'] + ",<br /><br />"
-#        verify_body += "Welcome to SIAC Feedback! In order to complete your registration, please click on the following link:<br /><br />"
-#        verify_body += '<a href="http://siacfeedback.org/activate/' + str(user_id) + '">http://siacfeedback.org/activate/' + str(user_id) + '</a>'
-#        verify_body += '<br /><br />'
-#        verify_body += '-The SIAC Feedback Team'
-#        siac.sendmail("Verify Your Account", request.form['email'], verify_body)
         t = threading.Thread(target=send_verification_email, args=[request.form['first'], request.form['email'], str(user_id)])
         t.setDaemon(False)
         t.start()
