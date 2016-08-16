@@ -55,6 +55,10 @@ def userById(user_id):
 def userByUsername(username):
     return db.users.find_one({"username" : username})
 
+def userWithEmailExists(email):
+    query = db.users.find({"email" : email})
+    return query.count() > 0
+
 def changeUserAttribute(user_id, attribute, value):
     query = db.users.update_one({"_id":user_id}, {"$set":{attribute:value}})
     return query

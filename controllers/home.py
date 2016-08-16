@@ -53,6 +53,8 @@ def register():
         # need to add username checking to see if username already exists
         if (not dbmain.usernameAvailable(request.form['username'])):
             return render_template('register.html', error='Your requested username is already taken.')
+        if (dbmain.userWithEmailExists(request.form['email'])):
+            return render_template('register.html', error='An account with this email address already exists.')
         user_id = dbmain.addUser(request.form['username'], helpers.get_hashed_password(request.form['password']), request.form['first'], request.form['last'], request.form['email'], request.form['acct_type'], request.form['school'])
         t = threading.Thread(target=send_verification_email, args=[request.form['first'], request.form['email'], str(user_id)])
         t.setDaemon(False)
