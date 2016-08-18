@@ -188,6 +188,7 @@ def openQuestionsForCourse(course_id):
     query = db.questions.find({"course_id":course_id, "open":True})
     result = []
     for question in query:
+        question["timestamp"] = timestampString(question["timestamp"])
         result.append(question)
     return result
 

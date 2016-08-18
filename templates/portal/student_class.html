@@ -13,12 +13,14 @@
             <thead>
                 <th>Respond</th>
                 <th>Question</th>
+                <th>Timestamp</th>
             </thead>
             <body>
                 {% for question in questions %}
                 <tr>
                     <td><button class="btn btn-xs btn-primary" onclick=showRespond("{{ question['_id']|string }}")>Respond</button></td>
                     <td>{{ question['name'] }}</td>
+                    <td>{{ question['timestamp'] }}</td>
                 </tr>
                 {% endfor %}
             </body>
