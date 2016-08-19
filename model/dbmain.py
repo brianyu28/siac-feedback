@@ -294,15 +294,22 @@ def authorOfResponse(feedback_id):
     return feedback['author_id']
 
 # function that adds a response from teacher to student
-def addReply(teacher_id, student_id, timestamp, contents):
+# 'origin' is the original general feedback or response, by the student
+def addReply(teacher_id, student_id, origin_id, timestamp, contents):
     reply = {
         "teacher_id": teacher_id,
         "student_id": student_id,
+        "origin_id": origin_id,
         "timestamp": timestamp,
         "contents": contents
     }
     reply_id = db.replies.insert_one(reply).inserted_id
     return reply_id
+
+# checks to see if teacher has already responded to a message
+def replyExists(teacher_id, origin_id):
+    query = db.replies.find({"teacher_id":teacher_id, "origin_id":origin_id})
+    return query.count() > 0
 
 def repliesForStudent(student_id):
     query = db.replies.find({"student_id":student_id})

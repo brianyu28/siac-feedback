@@ -42,7 +42,11 @@ def teacher_general():
     user = dbmain.currentUser()
     if user["acct_type"] != "Teacher":
         return redirect(url_for('home.homepage'))
-    feedback = dbmain.generalFeedbackForTeacher(user["_id"])
+    raw_feedback = dbmain.generalFeedbackForTeacher(user["_id"])
+    feedback = []
+    for item in raw_feedback:
+        feedback['responded_yet'] = "Yes" if dbmain.replyExists(user['_id'], item['_id']) else "No"
+        feedback.append(item)
     return render_template('teacher_general.html', user=user, feedback=feedback)
 
 @portal.route('/siac/pending/')
@@ -79,7 +83,11 @@ def question_responses(question_id):
     user = dbmain.currentUser()
     question = dbmain.questionIfExists(ObjectId(question_id))
     course = dbmain.courseIfExists(question["course_id"])
-    responses = dbmain.responsesForQuestion(question["_id"])
+    raw_responses = dbmain.responsesForQuestion(question["_id"])
+    responses = []
+    for item in raw_responses:
+        item['responded_yet'] = "Yes" if dbmain.replyExists(user['_id'], item['_id']) else "No"
+        responses.append(item)
     return render_template('question_responses.html', user=user, question=question, course=course, responses=responses)
 
 @portal.route('/students/classes/')

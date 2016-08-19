@@ -134,7 +134,7 @@ def send_general_reply():
     feedback_id = ObjectId(request.form['feedback_id'])
     author_id = dbmain.authorOfGeneralFeedback(feedback_id)
     reply = request.form['contents']
-    dbmain.addReply(user_id, author_id, int(time.time()), reply)
+    dbmain.addReply(user_id, author_id, feedback_id, int(time.time()), reply)
     return jsonify(success=True)
     
 # used for a teacher to send a reply to a student's response to a teacher's question
@@ -145,7 +145,7 @@ def send_question_reply():
     feedback_id = ObjectId(request.form['feedback_id'])
     author_id = dbmain.authorOfResponse(feedback_id)
     reply = request.form['contents']
-    dbmain.addReply(user_id, author_id, int(time.time()), reply)
+    dbmain.addReply(user_id, author_id, feedback_id, int(time.time()), reply)
     return jsonify(success=True)
 
 

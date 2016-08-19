@@ -24,6 +24,7 @@ This question is currently: <b style="font-size:22px;">{% if question['open'] %}
                 <th>Respond</th>
                 <th>Response</th>
                 <th>Timestamp</th>
+                <th>Responded Yet</th>
             </thead>
             <body>
                 {% for response in responses %}
@@ -32,6 +33,7 @@ This question is currently: <b style="font-size:22px;">{% if question['open'] %}
                     <td><button onclick=respond("{{ response['_id']|string }}") class="btn btn-xs btn-primary">Respond</button></td>
                     <td>{{ response.contents }}</td>
                     <td>{{ response.timestamp }}</td>
+                    <td>{{ response.responded_yet }}</td>
                 </tr>
                 {% endfor %}
             </body>
