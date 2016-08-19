@@ -19,7 +19,7 @@ Responses from Teachers
                 <tr>
                     <td><button onclick=deleteReply("{{ reply['_id']|string }}") class="btn btn-xs btn-danger">Delete</button></td>
                     <td>{{ reply.teacher.first }} {{ reply.teacher.last }}</td>
-                    <td>{{ reply.contents }}</td>
+                    <td style="white-space:pre-wrap;">{{ reply.contents }}</td>
                     <td>{{ reply.timestamp }}</td>
                 </tr>
                 {% endfor %}

@@ -20,7 +20,7 @@ General Feedback
                <tr>
                    <td id="status-row-{{ item['_id']|string }}"><button onclick=deleteFeedback("{{ item['_id']|string }}") class="btn btn-xs btn-danger">Delete</button></td>
                 <td><button onclick=respond("{{ item['_id']|string }}") class="btn btn-xs btn-primary">Respond</button></td>
-                <td id="feedback-contents-{{ item['_id']|string }}">{{ item.contents }}</td>
+                <td id="feedback-contents-{{ item['_id']|string }}" style="white-space:pre-wrap;">{{ item.contents }}</td>
                 <td>{{ item.timestamp }}</td>
                 <td id="responded-yet-{{ item['_id']|string }}">{{ item.responded_yet }}</td>
                 </tr>

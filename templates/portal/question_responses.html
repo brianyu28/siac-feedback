@@ -31,7 +31,7 @@ This question is currently: <b style="font-size:22px;">{% if question['open'] %}
                 <tr>
                     <td><button onclick=deleteResponse("{{ response['_id']|string }}") class="btn btn-xs btn-danger">Delete</button></td>
                     <td><button onclick=respond("{{ response['_id']|string }}") class="btn btn-xs btn-primary">Respond</button></td>
-                    <td id="response-contents-{{ response['_id']|string }}">{{ response.contents }}</td>
+                    <td id="response-contents-{{ response['_id']|string }}" style="white-space:pre-wrap;">{{ response.contents }}</td>
                     <td>{{ response.timestamp }}</td>
                     <td id="responded-yet-{{ response['_id']|string }}">{{ response.responded_yet }}</td>
                 </tr>
