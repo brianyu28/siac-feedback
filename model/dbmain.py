@@ -203,6 +203,12 @@ def addResponse(author_id, question_id, timestamp, contents):
     response_id = db.responses.insert_one(response).inserted_id
     return response_id
 
+# determines whether a student has already responded to a question
+def responseExists(author_id, question_id):
+    query = db.responses.find({"author_id":author_id, "question_id":question_id})
+    return query.count() > 0
+    
+
 def responseCountForQuestion(question_id):
     return db.responses.find({"question_id":question_id}).count()
 

@@ -14,6 +14,7 @@
                 <th>Respond</th>
                 <th>Question</th>
                 <th>Timestamp</th>
+                <th>Responded Yet</th>
             </thead>
             <body>
                 {% for question in questions %}
@@ -21,6 +22,7 @@
                     <td><button class="btn btn-xs btn-primary" onclick=showRespond("{{ question['_id']|string }}")>Respond</button></td>
                     <td>{{ question['name'] }}</td>
                     <td>{{ question['timestamp'] }}</td>
+                    <td>{{ question['responded_yet'] }}</td>
                 </tr>
                 {% endfor %}
             </body>

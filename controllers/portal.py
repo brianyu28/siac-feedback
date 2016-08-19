@@ -96,7 +96,11 @@ def student_course(course_id):
     course['teacher'] = dbmain.userById(course['teacher_id'])
     if course == None or not dbmain.studentIsRegisteredForCourse(user['_id'], ObjectId(course_id)):
         return redirect('portal.student_courses')
-    questions = dbmain.openQuestionsForCourse(course['_id'])
+    old_questions = dbmain.openQuestionsForCourse(course['_id'])
+    questions = []
+    for question in old_questions:
+        question["responded_yet"] = "Yes" if dbmain.responseExists(user['_id'], question['_id']) else "No"
+        questions.append(question)
     return render_template('student_class.html', user=user, course=course, questions=questions)
 
 @portal.route('/settings/')
