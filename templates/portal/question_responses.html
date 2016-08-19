@@ -31,7 +31,7 @@ This question is currently: <b style="font-size:22px;">{% if question['open'] %}
                 <tr>
                     <td><button onclick=deleteResponse("{{ response['_id']|string }}") class="btn btn-xs btn-danger">Delete</button></td>
                     <td><button onclick=respond("{{ response['_id']|string }}") class="btn btn-xs btn-primary">Respond</button></td>
-                    <td>{{ response.contents }}</td>
+                    <td id="response-contents-{{ response['_id']|string }}">{{ response.contents }}</td>
                     <td>{{ response.timestamp }}</td>
                     <td id="responded-yet-{{ response['_id']|string }}">{{ response.responded_yet }}</td>
                 </tr>
@@ -95,6 +95,8 @@ function deleteResponse(response_id) {
 
 function respond(feedback_id) {
     $('#submit-response-span').html('<button type="button" class="btn btn-primary" onclick=submitResponse("' + feedback_id + '")>Respond</button>');
+    contents = $('#response-contents-' + feedback_id).html();
+    $('#response-area').html('\n\nResponse to:\n\n' + contents);
     $('#respondModal').modal();
 
 }

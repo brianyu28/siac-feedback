@@ -20,7 +20,7 @@ General Feedback
                <tr>
                    <td id="status-row-{{ item['_id']|string }}"><button onclick=deleteFeedback("{{ item['_id']|string }}") class="btn btn-xs btn-danger">Delete</button></td>
                 <td><button onclick=respond("{{ item['_id']|string }}") class="btn btn-xs btn-primary">Respond</button></td>
-                <td>{{ item.contents }}</td>
+                <td id="feedback-contents-{{ item['_id']|string }}">{{ item.contents }}</td>
                 <td>{{ item.timestamp }}</td>
                 <td id="responded-yet-{{ item['_id']|string }}">{{ item.responded_yet }}</td>
                 </tr>
@@ -72,6 +72,8 @@ function deleteFeedback(feedback_id) {
 
 function respond(feedback_id) {
     $('#submit-response-span').html('<button type="button" class="btn btn-primary" onclick=submitResponse("' + feedback_id + '")>Respond</button>');
+    contents = $('#feedback-contents-' + feedback_id).html();
+    $('#response-area').html('\n\nResponse to:\n\n' + contents);
     $('#respondModal').modal();
 
 }
