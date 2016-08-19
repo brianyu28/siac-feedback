@@ -33,7 +33,7 @@ This question is currently: <b style="font-size:22px;">{% if question['open'] %}
                     <td><button onclick=respond("{{ response['_id']|string }}") class="btn btn-xs btn-primary">Respond</button></td>
                     <td>{{ response.contents }}</td>
                     <td>{{ response.timestamp }}</td>
-                    <td>{{ response.responded_yet }}</td>
+                    <td id="responded-yet-{{ response['_id']|string }}">{{ response.responded_yet }}</td>
                 </tr>
                 {% endfor %}
             </body>
@@ -107,6 +107,7 @@ function submitResponse(feedback_id) {
     
     $.post("{{ url_for('ajax.send_question_reply') }}", parameters, function(data, textStatus) {
         $('#submit-response-result').html('Reply successfully submitted.');
+        $('#responded-yet-' + feedback_id).html('Yes');
     }, "json");
 }
 

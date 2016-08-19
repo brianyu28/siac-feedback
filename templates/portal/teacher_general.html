@@ -22,7 +22,7 @@ General Feedback
                 <td><button onclick=respond("{{ item['_id']|string }}") class="btn btn-xs btn-primary">Respond</button></td>
                 <td>{{ item.contents }}</td>
                 <td>{{ item.timestamp }}</td>
-                <td>{{ item.responded_yet }}</td>
+                <td id="responded-yet-{{ item['_id']|string }}">{{ item.responded_yet }}</td>
                 </tr>
                 {% endfor %}
             </body>
@@ -84,6 +84,7 @@ function submitResponse(feedback_id) {
     
     $.post("{{ url_for('ajax.send_general_reply') }}", parameters, function(data, textStatus) {
         $('#submit-response-result').html('Reply successfully submitted.');
+        $('#responded-yet-' + feedback_id).html('Yes');
     }, "json");
 }
 

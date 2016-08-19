@@ -45,7 +45,7 @@ def teacher_general():
     raw_feedback = dbmain.generalFeedbackForTeacher(user["_id"])
     feedback = []
     for item in raw_feedback:
-        feedback['responded_yet'] = "Yes" if dbmain.replyExists(user['_id'], item['_id']) else "No"
+        item['responded_yet'] = "Yes" if dbmain.replyExists(user['_id'], item['_id']) else "No"
         feedback.append(item)
     return render_template('teacher_general.html', user=user, feedback=feedback)
 

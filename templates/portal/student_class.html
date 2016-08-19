@@ -22,7 +22,7 @@
                     <td><button class="btn btn-xs btn-primary" onclick=showRespond("{{ question['_id']|string }}")>Respond</button></td>
                     <td>{{ question['name'] }}</td>
                     <td>{{ question['timestamp'] }}</td>
-                    <td>{{ question['responded_yet'] }}</td>
+                    <td id="responded-yet-{{ question['_id']|string }}">{{ question['responded_yet'] }}</td>
                 </tr>
                 {% endfor %}
             </body>
@@ -86,8 +86,10 @@ function submitFeedback(question_id) {
     
     $.post("{{ url_for('ajax.submit_response') }}", parameters, function(data, textStatus) {
         $('#feedback-area').val('');
-        if (data["result"] == "Success")
+        if (data["result"] == "Success") {
             $('#feedback-result-span').html('Feedback submitted successfully.');
+            $('#responded-yet-' + question_id).html('Yes');
+        }
         else
             $('#feedback-result-span').html('Feedback did not pass spam filter.');
     });
