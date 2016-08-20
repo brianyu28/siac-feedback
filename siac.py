@@ -1,5 +1,6 @@
-from flask import Flask
+from flask import Flask, session
 from flask_mail import Mail, Message
+from datetime import timedelta
 from controllers.home import home
 from controllers.portal import portal
 from controllers.ajax import ajax
@@ -15,6 +16,12 @@ app.config.update(
 app.config.from_object(__name__)
 
 mail = Mail(app)
+
+@app.before_request
+def session_checker():
+    session.permanent = True
+    app.permanent_session_lifetime = timedelta(hours=4)
+    session.modified = True
 
 app.register_blueprint(home)
 app.register_blueprint(portal, url_prefix='/portal')
