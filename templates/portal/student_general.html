@@ -68,6 +68,7 @@ function writeFeedback(teacher_id) {
     $.post("{{ url_for('ajax.teacher_info') }}", parameters, function(data, textStatus) {
         $('#teacher-name-span').html(data["first"] + " " + data["last"]);
         $('#feedback-result-span').html('');
+        $('#feedback-area').val('');
         $('#submit-feedback-span').html('<button onclick=submitFeedback("' + teacher_id + '") class="btn btn-primary">Submit Feedback</button>');
         $('#write-feedback-modal').modal();
     }, "json");

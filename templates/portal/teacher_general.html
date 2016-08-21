@@ -73,7 +73,7 @@ function deleteFeedback(feedback_id) {
 function respond(feedback_id) {
     $('#submit-response-span').html('<button type="button" class="btn btn-primary" onclick=submitResponse("' + feedback_id + '")>Respond</button>');
     contents = $('#feedback-contents-' + feedback_id).html();
-    $('#response-area').html('\n\nResponse to:\n\n' + contents);
+    $('#response-area').val('\n\nResponse to:\n\n' + contents);
     $('#respondModal').modal();
 
 }

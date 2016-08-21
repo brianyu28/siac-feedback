@@ -73,6 +73,7 @@ function showRespond(question_id) {
     $.post("{{ url_for('ajax.question_details') }}", parameters, function(data, textStatus) {
         $('#question-content-span').html(data['question']['name']);
         $('#submit-feedback-span').html('<button onclick=submitFeedback("' + question_id + '") class="btn btn-md btn-primary">Submit Feedback</button>');
+        $('#feedback-area').val('');
        $('#write-feedback-modal').modal(); 
     });
 }
